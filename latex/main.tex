@@ -1,7 +1,9 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
 \usepackage{amsmath, amssymb}
 \usepackage{hyperref}
+\usepackage{cite}
 
 \begin{document}
 
@@ -17,20 +19,13 @@ Version control repository: \url{https://github.com/alextcup/MATH-3030-Project1}
 
 \section*{Overview}
 
-A \textit{Euclidean domain} is a mathematical structure (a \textit{ring}, more specifically an \textit{integral domain}) in which a division algorithm holds. In other words, a Euclidean domain is one where the ideas of quotients, remainders and congruence makes sense. %The canonical example of a Euclidean domain is $\mathbb{Z}$, of which other Euclidean domains can be considered generalizations.
-
+A \textit{Euclidean domain} is a mathematical structure (a \textit{ring}, more specifically an \textit{integral domain}) in which ideas like a division algorithm, remainders and greatest common divisors makes sense. %The canonical example of a Euclidean domain is $\mathbb{Z}$, of which other Euclidean domains can be considered generalizations.
 Some particularly interesting Euclidean domains are certain so-called \textit{quadratic integer rings}, which are rings of the form
 
-\[\mathbb{Z}[\omega]=\{a+b\omega:a,b\in\mathbb{Z}\},\]
-
-with
-
-\[\omega=\begin{cases}
-    \sqrt{d},&d\equiv 2,3~\text{(mod 4)} \\
-    \frac{1+\sqrt{d}}{2},&d\equiv 1~\text{(mod 4)}
+\[\mathbb{Z}[\omega]=\{a+b\omega:a,b\in\mathbb{Z}\},~~\text{where}~~\omega=\begin{cases} \sqrt{d},&d\equiv 2,3~\text{(mod 4)} \\ \frac{1+\sqrt{d}}{2},&d\equiv 1~\text{(mod 4)}
 \end{cases}\]
 
-where $d$ is a squarefree integer % ADD A REFERENCE!!!
+with $d$ being a squarefree integer. \cite{dummit_abstract_2009}
 
 %A notable such ring is $\mathbb{Z}[i]$, called the \textit{Gaussian integers}.
 
@@ -44,5 +39,8 @@ Research questions we hope to answer include:
 
 \section*{Methodology}
 To answer the above research questions we will use a combination of programming to generate plots which can then be qualitatively analyzed, as well as tools from ring theory and number theory. In particular, we will look at the norms of these rings and their bases in the complex plane.
+
+\bibliographystyle{plain}
+\bibliography{m3030_project1_proposal}
 
 \end{document}
