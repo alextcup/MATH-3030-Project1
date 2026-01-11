@@ -9,7 +9,7 @@
 
 \begin{center}{
     {\Large \textbf{Project Proposal - MATH 3030} \\ [5mm]
-    \Large On the geometry of residues in Euclidean imaginary quadratic integer rings \\[5mm]
+    \Large Geometry of the division algorithm in imaginary quadratic integer rings \\[5mm]
     Aleksandar Cupkovic \\ [1mm]
     Memorial University \\ [2mm]
     \today}
@@ -19,8 +19,8 @@ Version control repository: \url{https://github.com/alextcup/MATH-3030-Project1}
 
 \section*{Overview}
 
-A \textit{Euclidean domain} is a mathematical structure (a \textit{ring}, more specifically an \textit{integral domain}) in which ideas like a division algorithm, remainders and greatest common divisors makes sense. %The canonical example of a Euclidean domain is $\mathbb{Z}$, of which other Euclidean domains can be considered generalizations.
-Some particularly interesting Euclidean domains are certain so-called \textit{quadratic integer rings}, which are rings of the form
+A \textit{Euclidean domain} is a mathematical structure (a \textit{ring}, more specifically an \textit{integral domain}) in which ideas like a division algorithm, remainders and greatest common divisors make sense. %The canonical example of a Euclidean domain is $\mathbb{Z}$, of which other Euclidean domains can be considered generalizations.
+Some particularly interesting Euclidean domains arise from the so-called \textit{quadratic integer rings}, which are rings of the form
 
 \[\mathbb{Z}[\omega]=\{a+b\omega:a,b\in\mathbb{Z}\},~~\text{where}~~\omega=\begin{cases} \sqrt{d},&d\equiv 2,3~\text{(mod 4)} \\ \frac{1+\sqrt{d}}{2},&d\equiv 1~\text{(mod 4)}
 \end{cases}\]
@@ -29,16 +29,16 @@ with $d$ being a squarefree integer. \cite{dummit_abstract_2009}
 
 %A notable such ring is $\mathbb{Z}[i]$, called the \textit{Gaussian integers}.
 
-With the notion of a division algorithm one may also define a Euclidean algorithm to find the greatest common divisor between two elements of the ring. It happens that some of these rings, particularly those with $d<0$ for which a division algorithm holds, the number of steps it takes for the Euclidean algorithm to terminate as well as the remainders themselves give rise to beautiful fractal-like geometric structures. As such, the goal of this project is to attempt to describe this geometry.
+With the notion of a division algorithm one may also define a Euclidean algorithm to find the greatest common divisor between two elements of the ring. It happens that in some of these rings, particularly those with $d<0$ for which a division algorithm holds, the number of steps it takes for the Euclidean algorithm to terminate as well as the remainders themselves give rise to beautiful fractal-like geometric structures. As such, the goal of this project is to understand this geometry.
 
 Research questions we hope to answer include:
 \begin{itemize}
-    \item How does the choice of $d$ affect the geometry?
-    \item Can some of the observed phenomenon be described quantitatively or qualitatively?
+    \item How does the choice of $d$ affect this geometry?
+    \item How can we mathematically describe this geometry?
 \end{itemize}
 
 \section*{Methodology}
-To answer the above research questions we will use a combination of programming to generate plots which can then be qualitatively analyzed, as well as tools from ring theory and number theory. In particular, we will look at the norms of these rings and their bases in the complex plane.
+To answer the above research questions we will use a combination of programming in Python to generate plots which can then be qualitatively analyzed, as well as tools from ring theory, number theory and complex analysis. In particular, we will look at the norms and units of these rings.
 
 \bibliographystyle{plain}
 \bibliography{m3030_project1_proposal}
