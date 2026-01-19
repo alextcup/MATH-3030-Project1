@@ -1,0 +1,120 @@
+\documentclass{article}[12pt]
+
+\usepackage{fancyhdr,amsfonts,graphicx,amsmath,url,hyperref,enumerate,amssymb,wrapfig, booktabs, listings, color, cite, subcaption, multirow, makecell, appendix, rotating}
+
+\usepackage[right=2.5cm,left=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+
+\pagestyle{fancy}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+
+\begin{document}
+\begin{titlepage}
+\vspace*{2in}
+\begin{center}
+{\LARGE\ Geometry of the division algorithm in imaginary quadratic integer rings}
+\end{center}
+
+\vspace{2cm}
+
+\abstract{To be filled in}
+
+
+\vspace{3in}
+\begin{flushright}
+\begin{tabular}{l}
+Project 1 \\
+Mathematics 3030\\
+Submitted by: Aleksandar Cupkovic (ID: 202312288)\\
+Submitted to: Dr. Alex Bihlo\\
+\today
+\end{tabular}
+\end{flushright}
+
+\end{titlepage}
+
+\lhead{Project 1}
+\rhead{MATH3030}
+\lfoot{Aleksandar Cupkovic}
+%\underheadoverfoot
+\section{Introduction}
+The integers have many uniquely interesting properties (and a lack thereof) compared to its larger siblings $\mathbb{Q},\mathbb{R}$ and $\mathbb{C}$. These include the notions of divisibility, prime numbers, and the division algorithm to name a few. Despite their relatively simple definitions, all three of these have been extensively researched, and yet many questions regarding them are yet to be answered. Naturally, given the intricacies of the integers and features, one expects that extending $\mathbb{Z}$ to multiple dimensions would lead to other interesting mathematical objects with similar features. It happens that the so-called \textit{quadratic integers} are one case of such an extension.
+
+A \textit{quadratic field} is a field denoted by $\mathbb{Q}[{\sqrt{d}}]$ of the form
+\[\mathbb{Q}[{\sqrt{d}}]=\{a+b\sqrt{d}:a,b\in\mathbb{Q}\},\]
+where $d$ is a squarefree integer. Quadratic fields can be thought of as a natural extension of the rationals to two dimensions. Similarly, a \textit{quadratic integer ring} is an integral domain of the form 
+
+\[\mathbb{Z}[\omega]=\{a+b\omega:a,b\in\mathbb{Z}\},~~\text{where}~~\omega=\begin{cases} \sqrt{d},&d\equiv 2,3~\text{(mod 4)} \\ \frac{1+\sqrt{d}}{2},&d\equiv 1~\text{(mod 4)}
+\end{cases}\]
+
+with $d$ being a squarefree integer. The value of $\omega$ for $d\equiv 1\text{ (mod 4)}$ is a result of us being able to fit a slightly larger subring in $\mathbb{Q}[\sqrt{d}]$ with $\omega=\frac{1+\sqrt{d}}{2}$.
+
+The arithmetic of quadratic integer rings is quite similar to that of $\mathbb{C}$, and in fact the exact same when $d=-1$. Define the \textit{conjugate} of $\omega$ by
+\[\overline{\omega}=\begin{cases}
+    -\sqrt{d},&d\equiv 2,3\text{ (mod 4)} \\
+    \frac{1-\sqrt{d}}{2},&d\equiv1\text{ (mod 4)}
+\end{cases}\]
+
+It follows that for $z=a+b\omega\in\mathbb{Z}[\omega],$ $\overline{z}=a+b\overline{\omega}$. Moreover, we can define a \textit{norm} $N:\mathbb{Z}[\omega]\to \mathbb{N}\cup\{0\}$ by 
+\[N(a+b\omega)=(a+b\omega)(a+b\overline{\omega})=\begin{cases}
+    a^2-db^2,&d\equiv 2,3\text{ (mod 4)} \\
+    a^2+ab+\frac{1-d}{4}b^2,&d\equiv1\text{ (mod 4)}
+\end{cases},\]
+
+which gives us a notion of distance in $\mathbb{Z}[\omega]$. We can see that $N(0)=0$, and it can be shown that $N$ is multiplicative; for $a,b\in\mathbb{Z}[\omega]$, $N(ab)=N(a)N(b)$.
+
+Not all quadratic integer rings are as similar to the integers as others. In fact, there is only a finite number of them that have the concept of a division algorithm. The two most notable of these are the \textit{Gaussian integers} $\mathbb{Z}[i]$ and the \textit{Eisenstein integers} $\mathbb{Z}\left[\frac{1+\sqrt{3}i}{2}\right]$, which form square and hexagonal grids, respectively. The Gaussian integers are particularly familiar; they are those complex numbers whose real and imaginary parts are integers, and as such their arithmetic is the exact same (barring the fact that the norm in $\mathbb{Z}[i]$ is the square of the standard modulus in $\mathbb{C}$). These two are examples of \textit{imaginary} quadratic integers rings, those of who have $d<0$, and very few of these posses the similarities to $\mathbb{Z}$ that we seek, particularly those that are \textit{Euclidean domains}.
+
+A \textit{Euclidean domain} is an integral domain $R$ with a function $N: R\to \mathbb{N}\cup\{0\}$, $N(0)=0$, where for any two elements $a,b\in R$ with $b\not=0$, there exists $q,r\in R$ with
+\[a=bq+r,~~~~~\text{with }r=0\text{ or } N(r)<N(b),\]
+where $r$ and $q$ are called the \textit{remainder} and \textit{quotient} of the division, respectively.
+
+Many concepts from the number theory of $\mathbb{Z}$ can be generalized for Euclidean domains. Most notably, for a Euclidean domain $R$, one can define a \textit{Euclidean algorithm}: for elements $a,b\in R$, one can carry out the following sequence of divisions:
+\begin{align*}
+    a &= q_0b+r_0 \\
+    b &= q_1b+r_1 \\
+    r_0 &= q_1b+r_2 \\
+    \vdots \\
+    r_{n-2} &= q_n r_{n-1} + r_n \\
+    r_{n-1} &= q_{n+1} r_n
+\end{align*}
+
+where $r_n\not=0$ and $r_k=0$ for $k=n+1,n+2,\ldots$. Because $N(b)>N(r_0)>\cdots>N(r_n)$ is a decreasing sequence of nonnegative integers, the algorithm must eventually terminate, so such an $r_n$ exists.
+
+In particular, for $d<0$, only the values $d=-1,-2,-3,-7,-11$ make $\mathbb{Z}[\omega]$ a Euclidean domain with its norm $N$. The latter three are all congruent to 1 modulo 4, and so they form a hexagonal grid, whereas the cases $d=-1,-2$ form rectangular grids.
+
+\section{Methods}
+Let $\mathbb{Z}[\omega]$ be a quadratic integer ring that is also a Euclidean domain. Let $a,b\in \mathbb{Z}[\omega]$. We can compute the quotient $\frac{a}{b}$ in the quadratic field ring $\mathbb{Q}[\omega]$ by
+\[\frac{a}{b}=\frac{a\overline{b}}{b\overline{b}}=A+B\omega,\]
+
+where $A,B\in\mathbb{Q}$.
+
+For the remainder of this paper, fix $a\in\mathbb{Z}[w]$. Define $\mathcal{G}_\alpha:\mathbb{Z}[\omega]\to \mathbb{N}$ by
+\[\mathcal{G}_a(z):=\text{\# of steps for the Euclidean algorithm of } a/z \text{ to terminate}.\]
+
+For any $z\in\mathbb{Z}[\omega]$, we have that $a=zq+r$ for some $q,r\in\mathbb{Z}[\omega]$ with $r=0$ or $N(r)<N(z)$. Define $R:\mathbb{Z}[\omega]\to \mathbb{N}\cup \{0\}$ by
+\[R(z)=N(a-zq),\]
+noting that $R(z)=N(r)$. It is immediate that extending the domain of $R(z)$ to $\mathbb{Z}[\omega]$ that its zeros are those $z^*\in\mathbb{Q}[\omega]$ with $z^*=\frac{a}{q}$, $q\in\mathbb{Z}[\omega]$. Moreover, $\mathcal{G}_a (z^*)=1$ as the remainder of the division algorithm with $a/z^*$ is 0.
+
+
+
+%\bibliographystyle{plain}
+%\bibliography{}
+
+\newpage
+
+\appendix
+\appendixpage
+
+
+
+\end{document}
+
