@@ -1,6 +1,6 @@
 \documentclass{article}[12pt]
 
-\usepackage{fancyhdr,amsfonts,graphicx,amsmath,url,hyperref,enumerate,amssymb,wrapfig, booktabs, listings, color, cite, subcaption, multirow, makecell, appendix, rotating}
+\usepackage{fancyhdr,amsfonts,graphicx,amsmath,url,hyperref,enumerate,amssymb,amsthm,wrapfig, booktabs, listings, color, cite, subcaption, multirow, makecell, appendix, rotating, comment}
 
 \usepackage[right=2.5cm,left=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
 
@@ -9,6 +9,8 @@
 
 \newenvironment{theorem}[2][Theorem]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{definition}[2][Definition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
 \newenvironment{lemma}[2][Lemma]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
 \newenvironment{corollary}[2][Corollary]{\begin{trivlist}
@@ -16,7 +18,10 @@
 
 \newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
 
+\DeclareMathOperator*{\argmin}{argmin}
+
 \begin{document}
+
 \begin{titlepage}
 \vspace*{2in}
 \begin{center}
@@ -25,7 +30,7 @@
 
 \vspace{2cm}
 
-\abstract{To be filled in}
+\abstract{The division algorithm on imaginary quadratic integer rings gives rise to fractal geometry}
 
 
 \vspace{3in}
@@ -43,10 +48,10 @@ Submitted to: Dr. Alex Bihlo\\
 
 \lhead{Project 1}
 \rhead{MATH3030}
-\lfoot{Aleksandar Cupkovic}
+%\lfoot{Aleksandar Cupkovic}
 %\underheadoverfoot
 \section{Introduction}
-The integers have many uniquely interesting properties (and a lack thereof) compared to its larger siblings $\mathbb{Q},\mathbb{R}$ and $\mathbb{C}$. These include the notions of divisibility, prime numbers, and the division algorithm to name a few. Despite their relatively simple definitions, all three of these have been extensively researched, and yet many questions regarding them are yet to be answered. Naturally, given the intricacies of the integers and features, one expects that extending $\mathbb{Z}$ to multiple dimensions would lead to other interesting mathematical objects with similar features. It happens that the so-called \textit{quadratic integers} are one case of such an extension.
+The integers have many uniquely interesting properties (and a lack thereof) compared to its larger siblings $\mathbb{Q},\mathbb{R}$ and $\mathbb{C}$. These include the notions of divisibility, prime numbers, and the division algorithm to name a few. Despite their relatively simple definitions, all three of these have been extensively researched, and yet many questions regarding them are yet to be answered. Naturally, given the intricacies of the integers and features, one expects that extending $\mathbb{Z}$ to multiple dimensions would lead to other interesting mathematical objects with similar features. It happens that the so-called \textit{quadratic integers} are one important case of such an extension.
 
 A \textit{quadratic field} is a field denoted by $\mathbb{Q}[{\sqrt{d}}]$ of the form
 \[\mathbb{Q}[{\sqrt{d}}]=\{a+b\sqrt{d}:a,b\in\mathbb{Q}\},\]
@@ -89,30 +94,261 @@ Many concepts from the number theory of $\mathbb{Z}$ can be generalized for Eucl
 
 where $r_n\not=0$ and $r_k=0$ for $k=n+1,n+2,\ldots$. Because $N(b)>N(r_0)>\cdots>N(r_n)$ is a decreasing sequence of nonnegative integers, the algorithm must eventually terminate, so such an $r_n$ exists.
 
-In particular, for $d<0$, only the values $d=-1,-2,-3,-7,-11$ make $\mathbb{Z}[\omega]$ a Euclidean domain with its norm $N$. The latter three are all congruent to 1 modulo 4, and so they form a hexagonal grid, whereas the cases $d=-1,-2$ form rectangular grids.
+In particular, for $d<0$, only the values $d\in\{-1,-2,-3,-7,-11\}$ make $\mathbb{Z}[\omega]$ a Euclidean domain with its norm $N$. For the remainder of this paper, we consider $\omega$ where $d$ is one of the values above.
 
 \section{Methods}
-Let $\mathbb{Z}[\omega]$ be a quadratic integer ring that is also a Euclidean domain. Let $a,b\in \mathbb{Z}[\omega]$. We can compute the quotient $\frac{a}{b}$ in the quadratic field ring $\mathbb{Q}[\omega]$ by
-\[\frac{a}{b}=\frac{a\overline{b}}{b\overline{b}}=A+B\omega,\]
+For the rest of this paper, let $\mathbb{Z}[\omega]$ be an imaginary quadratic integer ring that is also a Euclidean domain. Hence, $\mathbb{Z}[\omega]$ is one with $d$ as above. Fix $\alpha\in\mathbb{Z}[\omega]$ and let $z\in\mathbb{Z}[\omega]$ be arbitrary.
 
-where $A,B\in\mathbb{Q}$.
+\subsection{Nearest-integer rounding}
 
-For the remainder of this paper, fix $a\in\mathbb{Z}[w]$. Define $\mathcal{G}_\alpha:\mathbb{Z}[\omega]\to \mathbb{N}$ by
-\[\mathcal{G}_a(z):=\text{\# of steps for the Euclidean algorithm of } a/z \text{ to terminate}.\]
+In order to practically implement the Euclidean algorithm for $\mathbb{Z}[\omega]$, we need to specify how the quotient and remainder terms $\gamma$ and $\delta$ are chosen at each division algorithm step. Unlike in $\mathbb{Z}$, the choice of $\gamma$ and thereby $\delta$ are not unique in $\mathbb{Z}[\omega]$. Hence, we must implement a choice of $\gamma$ that is both consistent and correct (results in $0\leq N(\delta)<N(z)$.
 
-For any $z\in\mathbb{Z}[\omega]$, we have that $a=zq+r$ for some $q,r\in\mathbb{Z}[\omega]$ with $r=0$ or $N(r)<N(z)$. Define $R:\mathbb{Z}[\omega]\to \mathbb{N}\cup \{0\}$ by
-\[R(z)=N(a-zq),\]
-noting that $R(z)=N(r)$. It is immediate that extending the domain of $R(z)$ to $\mathbb{Z}[\omega]$ that its zeros are those $z^*\in\mathbb{Q}[\omega]$ with $z^*=\frac{a}{q}$, $q\in\mathbb{Z}[\omega]$. Moreover, $\mathcal{G}_a (z^*)=1$ as the remainder of the division algorithm with $a/z^*$ is 0.
+To do this, we will use the \textit{nearest integer method}. Consider the quotient in $\mathbb{Q}[\omega]$,
+
+\[\frac{\alpha}{z}=A+B\omega,\]
+
+where $A,B\in\mathbb{Q}$. Let
+
+\[C=\{\lfloor A\rfloor+ \lfloor B\rfloor\omega, \lfloor A\rfloor + \lceil B \rceil\omega, \lceil A \rceil + \lfloor B\rfloor\omega, \lceil A \rceil + \lceil B \rceil \omega\}.\]
+
+That is, $C$ consists of all points in $\mathbb{Z}[\omega]$ obtained by rounding both $A,B$ either up or down.
+
+Now, we can choose $\gamma$ by
+
+\[\gamma:=\argmin_{c\in C} N(\alpha-\beta c).\]
+
+Given that $\gamma$ is obtained by rounding the components of the quotient $\frac{\alpha}{z}$, we will also denote $\left\lfloor\frac{\alpha}{z}\right\rceil:=\gamma$.
+
+Furthermore, we can choose $\delta$ according to the division algorithm:
+
+\[\delta:=\alpha-z\gamma.\]
+
+This choice of $\gamma,\delta$ always results in $0\leq N(\delta)<z$. With it, we can implement a consistent Euclidean algorithm for $\mathbb{Z}[\omega]$. 
+
+\subsection{Remainders of the Euclidean algorithm for $\mathbb{Z}[\omega]$}
+
+Let $\delta_k$ denote the remainder after the $k$-th step of the Euclidean algorithm for dividing $\alpha$ by $z$, beginning with $k=0$. We define the \textit{$k$-th order remainder function (at $\alpha$)} $\mathcal{R}^{k}_\alpha:\mathbb{Z}[\omega]\to \mathbb{N}\cup\{0\}$ by
+
+\[\mathcal{R}^{k}_\alpha(z)=\delta_k.\]
+
+We will mostly consider the cases $k=0,1$ as they have the most interesting geometry. As such, we will denote $\mathcal{R}_\alpha(z):=\mathcal{R}_\alpha^0(z)$.
+
+It is immediate that $\mathcal{R}_\alpha(z)=\alpha-z\left\lfloor\frac{\alpha}{z}\right\rceil$ and
+
+\[\mathcal{R}_\alpha^1(z)=z-\mathcal{R}_\alpha(z)\left\lfloor\frac{z}{\mathcal{R}_\alpha(z)}\right\rceil.\]
+
+\begin{theorem}
+    1 For $k\geq 2$:
+    \[\mathcal{R}_\alpha^k(z)=\mathcal{R}_\alpha^{k-2}-\mathcal{R}_\alpha^{k-1}(z)\left\lfloor\frac{z}{\mathcal{R}_\alpha^{k-1}(z)}\right\rceil.\]
+\end{theorem}
+
+\begin{proof}
+    We proceed by strong induction on $k$. For $k=2$, we have 
+    
+    \begin{align*}
+        \delta_2&=\delta_0 - \delta_1\gamma_2 \\
+        \Longrightarrow \mathcal{R}_\alpha^2(z)&=\mathcal{R}_\alpha-\mathcal{R}_\alpha^1(z) \left\lfloor\frac{z}{\mathcal{R}_\alpha^{1}(z)}\right\rceil,
+    \end{align*}
+
+    where $\delta_i,\gamma_i$ are the remainder and quotient at the $i$-th step of the Euclidean algorithm.
+
+    Now suppose the equality holds for all $2\leq i\leq k$. (MAYBE SCRAP THIS PROOF, IT'S NOT USEFUL YET
+\end{proof}
+
+If we extend the domain of $\mathcal{R}_\alpha$ to include $\mathbb{Q}[\omega]$, it follows that the roots of $\mathcal{R}_\alpha$ are of the form $z_0^*=\frac{\alpha}{\gamma}$, where $\gamma\in\mathbb{Z}[\omega]$.
+
+Similarly, we can find the roots of $\mathcal{R}_\alpha^1$:
+
+\begin{align*}
+    0&=z-\mathcal{R}_\alpha(z)\left\lfloor\frac{z}{\mathcal{R}_\alpha(z)}\right\rceil \\
+    0&=z-(\alpha-z\gamma_0)\gamma_1\\
+    0&=z(1+\gamma_0\gamma_1)-\alpha\gamma_1\\
+    \Longrightarrow z_1^*&=\frac{\alpha\gamma_1}{1+\gamma_0\gamma_1},
+\end{align*}
+
+where $\gamma_0,\gamma_1\in\mathbb{Z}[\omega]$.
+
+\subsection{Fundamental domains}
+
+A particularly useful notion regarding quadratic integer rings is their \textit{fundamental domain}, denoted by $\mathcal{D}_d$, which is the set of points in $\mathbb{C}$ closer (by norm) to the 0 element of $\mathbb{Z}[\omega]$ than any other element of $\mathbb{Z}[\omega$].
+
+\begin{lemma}
+    1 For $z\in \mathcal{D}_d$, $N(z)<1$ (where $N$ is the norm in $\mathbb{Z}[\omega]$).
+\end{lemma}
+
+\begin{proof}
+    Do this
+\end{proof}
+
+The following theorem connects the division algorithm and fundamental domains.
+
+\begin{theorem}
+    1 For any $z\in\mathbb{Z}[\omega]$, $z\not=0$,
+
+    \[\frac{\alpha}{z}-\left\lfloor\frac{\alpha}{z}\right\rceil\in \mathcal{D}_d\]
+\end{theorem}
+
+\begin{proof}
+    Consider the division algorithm applied to $\alpha,z$ yielding $\alpha=z\left\lfloor\frac{\alpha}{z}\right\rceil+\delta$ with $0\leq N(\delta)\leq N(z)$. Dividing by $z$ and rearranging, we have
+
+    \[\frac{\alpha}{z}-\left\lfloor\frac{\alpha}{z}\right\rceil=\frac{\delta}{z}.\]
+    
+    Since $N(\delta)<N(z)$, it follows by multiplicative properties of the norm that $N\left(\frac{\delta}{z}\right)<1$, so by Lemma 1 we have that $\frac{\alpha}{z}-\left\lfloor\frac{\alpha}{z}\right\rceil\in \mathcal{D}_d$.
+\end{proof}
+
+In other terms, $\left\lfloor\frac{\alpha}{z}\right\rceil$ can be thought of as the element of $\mathbb{Z}[\omega]$ landing $\frac{\alpha}{z}-\left\lfloor\frac{\alpha}{z}\right\rceil$ in the fundamental domain. 
+
+If $\frac{\alpha}{z}\in \mathcal{D}_d$, it follows that $\left\lfloor\frac{\alpha}{z}\right\rceil=0$. In this case, we want to find the $z$ such that $\frac{\alpha}{z}\in \mathcal{D}_d$, in other words, we want to consider the mapping of $\mathcal{D}_d$ by the inverse of the map $z\mapsto\frac{\alpha}{z}$. For the $\mathcal{R}_\alpha$ case, this inverse map is just $\varphi_0(z)=\frac{a}{z}$ itself. 
+
+For the $\mathcal{R}_\alpha^1$ case, we instead want to consider the mapping of the fundamental domain under $z\mapsto\frac{z}{\mathcal{R}_\alpha(z)}=\frac{z}{\alpha-z\gamma_0}$. Solving for $z$, we obtain the inverse map:
+
+\[\varphi_1(z)=\frac{\alpha z}{\gamma_0z+1}.\]
+
+In order to make use of these inverse maps, we must explicitly define the fundamental domains for $d\in\{-1,-2,-3,-7,-11\}$. We use those defined in [REFERENCE]:
+
+\begin{definition}
+    1  (MAYBE SCRAP THIS AND JUST HAVE IT PLAIN)
+    For $d \in\{-1,-2\}$, define
+    \[
+    \mathcal{D}_d := \left\{ z+yi\in\mathbb{C} : |x| \leq \frac{1}{2}, \ |y| \leq \frac{\sqrt{|d|}}{2} \right\}.
+    \]
+    For $d\in\{-3,-7,-11\}$, define
+    \[
+    \mathcal{D}_d := \left\{ x+yi\in\mathbb{C} : |x| \leq \frac{1}{2}, \ \left| y \pm \frac{x}{\sqrt{|d|}} \right| \leq \frac{|d| + 1}{4\sqrt{|d|}} \right\}.
+    \]
+\end{definition}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{d1_fd.png}
+        \caption{Fundamental domain and its tiling of the complex plane, $d=-1$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{d3_fd.png}
+        \caption{Fundamental domain and its tiling of the complex plane, $d=-3$}
+    \end{subfigure}
+    \caption{Fundamental domains for $d=-1,-3$}
+    \label{fd}
+\end{figure}
+
+For $d\in\{-1,-2\}$, the fundamental domain is rectangular, whereas it is hexagonal for $d\in\{-3,-7,-11\}$. Also, $\mathcal{D}_d$ tiles the complex plane, so each $z\in\mathbb{Z}[\omega]$ lies in a unique region corresponding to a translation of $\mathcal{D}_d$.
+
+In order to understand how the fundamental domain maps by $\varphi_0,\varphi_1$, it is enough to consider an arbitrary line in the complex plane is mapped (as the boundary of $\mathcal{D}_d$ is composed of straight lines). Define $\ell(t)$ as a parametrization of such a line for $t\in\mathbb{R}$. % with $t\in[a,b]$ for some $a,b\in\mathbb{R}, a<b$ and $m,c\in\mathbb{C}$.
+
+Notice that both $\varphi_1,\varphi_2$ are both M\"obius transformations; they are a fraction of two linear complex functions. Such functions are known to map lines to circles. This means that
+
+\[\varphi_0(\ell(t))=\frac{\alpha}{\ell(t)},~~~\varphi_1(\ell(t))=\frac{\alpha\ell(t)}{
+\gamma_0\ell(t)+1,
+}\]
+
+are both circles, provided that $\ell(t)\not=0$ for $\varphi_0$ and $\ell(t)\not=-\frac{1}{\gamma_0}$ for $\varphi_1$, for all $t\in\mathbb{R}$.
+
+Since $\ell(t)$ contains the point at infinity, $\varphi_0(\ell(t))$ will pass through the origin. In a similar vein, $\varphi_1$ will pass through the point
+
+\[\lim_{t\to\infty}\frac{\alpha\ell(t)}{\gamma_0\ell(t)+1}=\lim_{t\to\infty}\frac{\alpha}{\gamma_0+\frac{1}{\ell(t)}}=\frac{\alpha}{\gamma_0},\]
+
+and similar for $t\to-\infty$. Hence $\varphi_1$ will have many more possible images, given the extra $\gamma_0$ parameter, and does not necessarily pass through the origin. (MAYBE STATE WHEN IT DOES)
+
+Let $\ell(t)$ be a parametrization of the line of the boundary of some translation of the fundamental domain. Since M\"obius transformations are distance preserving (CHECK), a center of a circle above will be the point $\varphi_0(\beta)$, $\varphi_1(\beta)$, where $\beta\in\mathbb{Z}[\omega]$. For a circle of the form $\varphi_0(\ell(t))$, it will have a center of the form
+
+\[\varphi_0(\beta)=\frac{\alpha}{\beta},\]
+
+which as discussed earlier, is a root of $\mathcal{R}_\alpha$.
+
+Similarly,
+
+\[\varphi_1(\beta)=\frac{\alpha\beta}{\gamma_0\beta+1},\]
+
+defines the centers for $\varphi_1(\ell(t))$, which are exactly roots of $\mathcal{R}_\alpha^1$ as seen previously.
+
+\section{Results}
+Using the tools from the previous section, we can attempt to characterize the geometry of $\mathcal{R}_\alpha$ and $\mathcal{R}_\alpha^1$ for each $d\in\{-1,-2,-3,-7,-11\}$.
+
+\subsection{Gaussian integers ($d=-1$)}
+
+The most famous example of a quadratic integer ring is $\mathbb{Z}[-1]$, known as the \textit{Gaussian integers}. $\mathbb{Z}[\omega]$ is particularly nice to deal with given that it forms a square grid of the complex plane. Its \newline fundamental domain as seen in definition 1 and Figure \ref{fd} is the square centered at the origin of side length $1/2$ in the complex plane.
+
+The furthest $z_0^*$ from the origin are the associates of $\alpha$, which in $\mathbb{Z}[i]$ are any rotation of $\alpha$ by $2m\pi+\frac{\pi}{2}$, $m\in\mathbb{Z}$. Hence, the largest of the circles in $R_\alpha$ will be those centered at an associate of $\alpha$, of which there will be four, each a $\frac{\pi}{2}$ rotation from one another. As $\beta\in\mathbb{Z}[\omega]$ increases, the centers of these circles $\frac{\alpha}{\beta}$ will get closer and closer to the origin, creating smaller concentric circles within the initial larger ones.
+
+$\mathcal{R}_1$ is a much different story due to the extra $\gamma_0$ parameter. Since $\gamma_0\in\mathbb{Z}[\omega$], it is not necessarily the case that the furthest $z_1^*$ from the origin are associates of $\alpha$. For instance, $\gamma_0=0,N(\gamma_1)>1$ will yield a $z_1^*$ with $N(z_1^*)>N(\alpha)$. Luckily, $\gamma_0$
+
+\subsection{$d=-2$}
+This is the only other imaginary quadratic integer ring with a rectangular fundamental domain, and as such $\mathbb{Z}[-2]$ will behave quite similarly to $\mathbb{Z}[i]$ with regards to $\mathcal{R}_\alpha^k$. The main difference is that the fundamental domain is now a rectangle with side length $1/2$ and $\sqrt{2}/2$. As such, while the the centers of circles in $\mathbb{Z}[-2]$ are still roots of $\mathcal{R}_\alpha$ and $\mathcal{R}_\alpha^1$, these circles are not necessarily all the same size. Indeed, the boundary lines at $|x|\leq\frac{1}{2}$ of $\mathcal{D}_{-2}$ will map by $\varphi_0,\varphi_1$ to circles that are larger than the larger boundary lines at $|y|\leq\frac{\sqrt2}{2}$. 
+
+\newpage
+
+\subsection{Eisenstein integers ($d=-3$}
+
+The second most famous example of a quadratic integer ring is $\mathbb{Z}\left[\frac{1+\sqrt{-3}}{2}\right]$, called the \textit{Eisenstein integers}. Unfortunately, there are no quadratic integer rings with names. Let $\omega_E=\frac{1+\sqrt{-3}}{2}$. This $\mathbb{Z}[\omega_E]$ has a hexagonal fundamental domain, and in fact $\mathcal{D}_{-3}$ is particularly nice as this hexagon is regular as in Figure \ref{fd}.
 
 
+
+
+\begin{comment}
+Let $f(z)=\frac{a}{z}$. To see how $f$ transforms the fundamental region, we observe how it transforms the boundary lines,
+
+\[|\Re(z
+)|=\frac{1}{2}+k, ~~~|\Im(z)|=\frac{1}{2}+l.\]
+
+Let $K=\frac{1}{2}+k$, $L=\frac{1}{2}+l$. Recall that $a=b+ci$ for some $b,c\in\mathbb{R}$. Then, the first boundary is defined by the vertical line $s_1 = K+it$, and we consider the transformation of it by $f$:
+
+\begin{align*}
+    f(s_1)&=\frac{a}{K+it}\\
+           &=\frac{a(K-it)}{K^2+t^2}\\
+           &=\frac{aK}{K^2+t^2}-\frac{at}{K^2+t^2}i.
+\end{align*}
+
+Let $u(t)=\frac{aK}{K^2+t^2}$, $v(t)=-\frac{at}{K^2+t^2}$. Now,
+
+\begin{align*}
+    [u(t)]^2+[v(t)]^2 &= \frac{a^2 K^2+at^2}{(K^2+t^2)^2} \\
+    &=\frac{a^2}{K^2+t^2}\\
+    &=\frac{au(t)}{K}\\
+\end{align*}
+
+Observe further that
+    
+\begin{align*}
+    [u(t)]^2 - \frac{au(t)}{K}+[v(t)]^2 & = 0 \\
+    \Longrightarrow\left[u(t)-\frac{a}{2K}\right]^2 + [v(t)]^2 &= \left(\frac{a}{2K}\right)^2,
+\end{align*}
+
+which is a circle centered at $\left(\frac{a}{2K},0\right)$ of radius $\frac{a}{2K}$. Hence, we can write $f(s_1)$ in exponential form as
+
+\[f(s_1)=\frac{a}{2K}\left(1+e^{it}\right).\]
+
+A similar derivation can be done for the horizontal boundary defined by the line $s_2=t+iL$. First, observe that $f(s_1)=\frac{at}{L^2+t^2}-\frac{aL}{L^2+t^2}$, and we let $u(t)=\frac{at}{L^2+t^2}$, $v(t)=-\frac{aL}{L^2+t^2}$. Then
+
+\begin{align*}
+    [u(t)]^2+[v(t)]^2 &= \frac{a^2t^2+a^2L^2}{(L^2+t^2)^2}\\
+    &=\frac{a^2}{L^2+t^2}
+    \\
+    &=-\frac{av(t)}{L}
+\end{align*}
+
+We can complete the square in the same way as the previous case, and see that the above equation simplified to
+
+\[[u(t)]^2+\left[v(t)+\frac{a}{2L}\right]^2=\left(\frac{a}{2L}\right)^2,\]
+
+which is a circle centered at $\left(0,-\frac{a}{2L}\right)$ of radius $\frac{a}{2L}$. In exponential form,
+
+\[f(s_2)=\frac{a}{2L}\left(-1+e^{it}\right).\]
+
+\newpage
+
+Hence, each $D_{k,l}$ maps to 4 perpendicular circles 
+\end{comment}
 
 %\bibliographystyle{plain}
 %\bibliography{}
 
-\newpage
 
-\appendix
-\appendixpage
+%\appendix
+%\appendixpage
 
 
 
