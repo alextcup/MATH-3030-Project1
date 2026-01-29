@@ -1,0 +1,364 @@
+\documentclass{beamer}
+\usetheme{metropolis} 
+\usepackage{fontspec}
+\usepackage{fancyhdr, amsmath,amsfonts,graphicx,amsmath,url,hyperref,enumerate,amssymb,wrapfig, booktabs, listings, color, cite, subcaption, multirow, makecell, appendix, rotating, tikz}
+\setsansfont{Inter} % or Fira Sans, Source Sans 3
+\title{Geometry of the division algorithm in imaginary quadratic integer rings}
+\author{Aleksandar Cupkovic}
+\institute{MATH 3030}
+\date{2026}
+
+\DeclareMathOperator*{\argmin}{argmin}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Background}
+    One of the most fundamental results regarding the integers is the \textit{division algorithm}: for any $a,b\in\mathbb{Z}$, there exists a quotient $q$ and remainder $r$ in $\mathbb{Z}$ with
+
+\[a=bq+r,~~~0\leq r<b.\]
+
+\end{frame}
+
+\begin{frame}{Background}
+    The division algorithm is particularly useful as with it, we can define a \textit{Euclidean algorithm}, which finds the greatest common divisor of two integers: for $a,b\in \mathbb{Z}$, carry out the following sequence of divisions:
+\begin{align*}
+    a &= q_0b+r_0 \\
+    b &= q_1b+r_1 \\
+    r_0 &= q_1r_1+r_2 \\
+    \vdots \\
+    r_{n-2} &= q_n r_{n-1} + r_n \\
+    r_{n-1} &= q_{n+1} r_n
+\end{align*}
+
+where $r_n\not=0$ and $r_k=0$ for $k=n+1,n+2,\ldots$. This final $r_n$ is the greatest common divisor of $a$ and $b$.
+\end{frame}
+
+\begin{frame}{Background}
+    Using the Euclidean algorithm we can further go on to define the ideas of \textit{congruences} and the \textit{Euler}-$\phi$ \textit{function}, which both have applied practicality in the field of cryptography.
+
+    So, given that the division algorithm is so fundamental to the integers, are there any other mathematical objects that also have a division algorithm?
+\end{frame}
+
+\begin{frame}{Background}
+    There are in fact such objects, called \textit{Euclidean domains}. These are integral domains $(R,+,\cdot)$ with a function $N: R\to \mathbb{N}\cup\{0\}$, $N(0)=0$, where for any two elements $\alpha,\beta\in R$ with $\beta\not=0$, there exists $\gamma,\delta\in R$ with
+    \[\alpha=\beta\cdot\gamma+\delta,~~~~~\text{with }\delta=0\text{ or } N(\delta)<N(\beta).\]
+
+    The integers are just the case $R=\mathbb{Z}, N(n)=|n|$.
+\end{frame}
+
+\begin{frame}{Background}
+    Of course, we can find many examples of Euclidean domains. For instance, any field is a Euclidean domain, where need not worry about the norm condition. So, the question now becomes whether or not we can find interesting Euclidean domains to study.
+\end{frame}
+
+\begin{frame}{Background}
+    The most notable Euclidean domains where the division algorithm is nontrivial are the \textit{quadratic integer rings}, but to discuss them we must first define their equivalent of $\mathbb{Q}$. A \textit{quadratic field} is a field denoted by $\mathbb{Q}[{\sqrt{d}}]$ of the form
+    \[\mathbb{Q}[{\sqrt{d}}]=\{a+b\sqrt{d}:a,b\in\mathbb{Q}\},\]
+    where $d$ is a squarefree integer.
+\end{frame}
+
+\begin{frame}{Background}
+    Similarly, a \textit{quadratic integer ring} is an integral domain of the form 
+    
+    \[\mathbb{Z}[\omega]=\{a+b\omega:a,b\in\mathbb{Z}\},~~\text{where}~~\omega=\begin{cases} \sqrt{d},&d\equiv 2,3~\text{(mod 4)} \\ \frac{1+\sqrt{d}}{2},&d\equiv 1~\text{(mod 4)}
+    \end{cases}\]
+    
+    with $d$ being a squarefree integer. The value of $\omega$ for $d\equiv 1\text{ (mod 4)}$ is a result of us being able to fit a slightly larger subring in $\mathbb{Q}[\sqrt{d}]$ with $\omega=\frac{1+\sqrt{d}}{2}$.
+    
+\end{frame}
+
+\begin{frame}{Background}
+    Addition and multiplication can be carried out as they would be in the ambient field ($\mathbb{R}$ or $\mathbb{C}$). We can the \textit{conjugate} of $\omega$ by
+    \[\overline{\omega}=\begin{cases}
+        -\sqrt{d},&d\equiv 2,3\text{ (mod 4)} \\
+        \frac{1-\sqrt{d}}{2},&d\equiv1\text{ (mod 4)}
+    \end{cases}\]
+    
+    It follows that for $z=a+b\omega\in\mathbb{Z}[\omega],$ $\overline{z}=a+b\overline{\omega}$.
+\end{frame}
+
+\begin{frame}{Background}
+    Most importantly for the division algorithm, we can define a \textit{norm} $N:\mathbb{Z}[\omega]\to \mathbb{N}\cup\{0\}$ by 
+    \[N(a+b\omega)=(a+b\omega)(a+b\overline{\omega})=\begin{cases}
+        a^2-db^2,&d\equiv 2,3\text{(mod 4)} \\
+        a^2+ab+\frac{1-d}{4}b^2,&d\equiv1\text{ (mod 4)}
+    \end{cases},\]
+    
+    which gives us a notion of distance in $\mathbb{Z}[\omega]$. We can see that $N(0)=0$, and it can be shown that $N$ is multiplicative; for $a,b\in\mathbb{Z}[\omega]$, $N(ab)=N(a)N(b)$.    
+\end{frame}
+
+\begin{frame}{Background}
+    However, not all quadratic integer rings are Euclidean domains. In fact, there are only finitely many with $d<0$: only the values $d\in\{-1,-2,-3,-7,-11\}$ make $\mathbb{Z}[\omega]$ a Euclidean domain with its norm $N$. The latter three are all congruent to 1 modulo 4, and so they form a hexagonal grid, whereas the cases $d=-1,-2$ form rectangular grids.
+
+    We will consider the division algorithm for these values of $d$.
+\end{frame}
+
+\begin{frame}{Background}
+    Now comes our first question of implementation: we know that these Euclidean domains have a division algorithm and by extension a Euclidean algorithm, but how can we explicitly define the choices of $\gamma,\delta$?
+
+    It turns out that unlike with $\mathbb{Z}$, we may have many possible choices for $\gamma$! In fact, how we implement this choice will actively effect the geometry of remainders, which is a research question on its own.
+\end{frame}
+
+\begin{frame}{Background}
+    We will choose the simplest method: suppose we are given $\alpha,\beta\in \mathbb{Z}[\omega]$, and we wish to apply the division algorithm for dividing $\alpha$ by $\beta$. We can compute the quotient in the ambient field $\mathbb{Q}[\omega]$:
+
+    \[\frac{\alpha}{\beta}=A+B\omega,~~~A,B\in\mathbb{Q}.\]
+\end{frame}
+
+\begin{frame}{Background}
+    Let $\gamma_i=\lfloor A\rceil + \lfloor B \rceil\omega$, $i=1,2,3,4$, where $\lfloor \cdot\rceil$ is any choice of taking the floor or ceiling of an element. Then, choose $\gamma$ by 
+
+    \[\gamma=\argmin_{1\leq i\leq4} N(\alpha-\beta\gamma_i),\]
+
+    and choose $\delta=\alpha-\beta\gamma$. In essence, this involves finding the nearest point on the $\omega$ lattice to the quotient $\frac{\alpha}{\beta}$.
+\end{frame}
+
+\begin{frame}{Background}
+    With this, we can implement the Euclidean algorithm for these quadratic integer rings, and make various plots in the complex plane of its geometry. For example, let $d=-3$, fix $\alpha=92+87\omega$, and let's consider the norm of the remainder after the second step of the Euclidean algorithm.
+\end{frame}
+
+\begin{frame}{Background}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.75\linewidth]{Screenshot from 2026-01-25 10-22-33.png}
+        \label{fig:placeholder}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Background}
+    This is quite peculiar! Why are fractals showing up? How does the plot change as we consider different values of $\omega$? Can we try to describe this geometry mathematically?
+
+    These are questions we will discuss and try to answer in the rest of this presentation.
+\end{frame}
+
+\begin{frame}{Methods}
+    For the rest of this presentation, fix $\alpha\in\mathbb{Z}[\omega]$. First, we define a function $\mathcal{R}^{k}_\alpha:\mathbb{Z}[\omega]\to\mathbb{N}\cup\{0\}$ by:
+
+    \[\mathcal{R}^{k}_\alpha(z)=\delta_k,\]
+
+    where $\delta_k$ is the $k$-th remainder in the Euclidean algorithm applied to $\alpha$ and $z$.
+\end{frame}
+
+\begin{frame}{Methods}
+    We will mostly consider $k=0,1$ as they are the most simple to deal with, and larger $k$ values behave mostly similarly. For instance, for $k=0$:
+
+    \[\mathcal{R}^{0}_\alpha(z)=\alpha-z\gamma,\]
+
+    where $\gamma$ is chosen using the nearest-integer method defined earlier.
+
+    It is immediate that if we allow the domain of $\mathcal{R}^{0}_\alpha$ to be extended to $\mathbb{Q}[\omega]$, then its zeros are of the form $z_{(1)}^*=\frac{\alpha}{\gamma}$, where $\gamma\in\mathbb{Z}[\omega]$.
+\end{frame}
+
+\begin{frame}{Methods}
+    An important aspect of Euclidean domains $\mathbb{Z}[\omega]$ are their \textit{fundamental domains}, denoted $\mathcal{D}_d$, which is the set of points in $\{z\in\mathbb{C}:|z|\leq1\}$ that are closer to the origin than any other element of $\mathbb{Z}[\omega]$.
+
+\end{frame}
+
+\begin{frame}{Methods}
+    In fact, we have already encountered the fundamental domain. For an iteration of the division algorithm $\alpha=z\gamma+\delta$, provided $z\not=0$, we can divide by $z$ and rearrange:
+
+    \[\frac{\alpha}{z}-\gamma=\frac{\delta}{z}.\]
+
+    By the multiplicative properties of field norms, $N\left(\frac{\delta}{z}\right)<1$, so $\frac{\alpha}{z}-\gamma$ is in the fundamental domain.
+
+    In other words, we are choosing $\gamma$ as the unique element of $\mathbb{Z}[\omega]$ so that $\frac{\alpha}{z}-\gamma\in \mathcal{D}_d$.
+\end{frame}
+
+\begin{frame}{Methods}
+    We should expect that describing the geometry of $\mathcal{R}^{0}_\alpha(z)$ requires describing how the fundamental domain transforms under $\frac{\alpha}{z}$. To do this, we must explicitly define each $\mathcal{D}_d$
+\end{frame}
+
+\begin{frame}{Methods}
+    For $d \in\{-1,-2\}$, define
+    \[
+    \mathcal{D}_d := \left\{ z+yi\in\mathbb{C} : |x| \leq \frac{1}{2}, \ |y| \leq \frac{\sqrt{d}}{2} \right\}.
+    \]
+    For $d\in\{=3,-7,-11\}$, define
+    \[
+    \mathcal{D}_d := \left\{ x+yi\in\mathbb{C} : |x| \leq \frac{1}{2}, \ \left| y \pm \frac{x}{\sqrt{d}} \right| \leq \frac{d + 1}{4\sqrt{d}} \right\}.
+    \]
+
+    (CITE THIS!!!)
+\end{frame}
+
+\begin{frame}{Methods}
+    We can see that for the former case, the fundamental domain is a rectangle, and for the latter it is a hexagon. In either case, it is bounded by lines in the complex plane. Let us observe how lines transform by $f(z)=\frac{\alpha}{z}$.
+\end{frame}
+
+\begin{frame}{Methods}
+    A line in the complex plane can be defined by the parametrization $s(t)=mt+c$, where $m,t\in\mathbb{C}$. Then
+
+    \[f(s(t))=\frac{\alpha}{mt+c},\]
+
+    is a parametrization for the image of the line $s(t)$ under $f$. But what is this image?
+\end{frame}
+
+\begin{frame}{Methods}
+    Note that $f$ is a fraction of two linear complex functions. Such a function is called a \textit{M\"obius transformation}. These are functions that only involve scaling, translation, rotation and \textit{complex inversion}. 
+    
+    In particular, \textit{a M\"obius transformation involving complex inversion maps lines to circles passing through the origin!}. (CITE ME!!!)
+    
+\end{frame}
+
+\begin{frame}{Methods}
+    So, each boundary line of the fundamental domain will map to a circle passing through the origin, as will each line comprising its copies along the complex plane.
+\end{frame}
+
+\begin{frame}{Methods}
+    We can repeat this pattern for $\mathcal{R}_\alpha^1$ where we consider instead the mapping $g(z)=\frac{z}{\mathcal{R}_\alpha^0(z)}=\frac{z}{\alpha - z\gamma}$. This is another M\"obius transformation with complex inversion, so we too expect it to map the fundamental domain to circles, but this time where they pass through depends on $\gamma$.
+\end{frame}
+
+\begin{frame}{Methods}
+    In general for $k\geq 2$, the geometry of $\mathcal{R}_\alpha^k$ depends on how the map $h_k(z)=\frac{\mathcal{R}_\alpha^{k-1}(z)}{\mathcal{R}_\alpha^{k}(z)}$ transforms the fundamental domain. 
+
+    Each $h_k(z)$ involves complex inversion and will map the fundamental domain to circles passing through a point determined by the values of $\gamma$ preceding it.
+\end{frame}
+
+\begin{frame}{Results}
+    The best place to see this for $\mathcal{R}_\alpha^0$ is $d=-1$, the so called \textit{Gaussian integers}. Where its domain is a cube with side length $1/2$, we expect to have four large circular regions comprised of infinitely smaller circles within them.
+
+\end{frame}
+
+\begin{frame}{Results}
+    \begin{figure}[htbp]
+        \centering
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{gaussr1.png}
+            \caption{$N(\mathcal{R}_\alpha^0(z))$ with $d=-1$. The red dot is $\alpha$.}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{gaussr1hollow.png}
+            \caption{Fundamental domain mapped by $f(z)=\frac{\alpha}{z}$}
+        \end{subfigure}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Results}
+    Aside from the concentric circle formations, there are a few other things to comment about regarding plot (a). 
+
+    Firstly, each dark blue region corresponds exactly to one of the roots of $z_{(1)}^*$ described earlier, and that each center of a circle is such a root. 
+
+    Secondly, this geometry is surrounded by a sea of dark red. This is because at this point, the divisors get large enough that $N(\mathcal{R}_\alpha^0(z))=N(\alpha)$.
+\end{frame}
+
+\begin{frame}{Results}
+
+    We can also consider $\mathcal{R}_\alpha^1$ with $d=-1$.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\linewidth]{gaussr2.png}
+        \caption{$N(\mathcal{R}_\alpha^0(z))$ with $d=-1$.}
+        \label{fig:placeholder}
+    \end{figure}
+    
+\end{frame}
+
+\begin{frame}{Results}
+    Again, we can see many concentric circles, but this time much more than the previous. This is both due to the introduction of a parameter $\gamma$ allowing for many more centers of these circles (aside from the origin), and the fact that the roots $z_{(2)}^*$ now rely on two elements of $\mathbb{Z}[\omega]$.
+\end{frame}
+
+\begin{frame}{Results}
+    Now consider $d=-3$. This case also has a name, the \textit{Eisenstein integers}.
+    \begin{figure}[htbp]
+        \centering
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{eisenr2.png}
+            \caption{$N(\mathcal{R}_\alpha^0(z))$ with $d=-3$. The red dot is $\alpha$.}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{eisenr3.png}
+            \caption{$N(\mathcal{R}_\alpha^1(z))$ with $d=-3$.}
+        \end{subfigure}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Results}
+    We can see the same concentric circle formation, but this time we have six such circles. This makes sense, as the $\mathcal{D}_{-3}$ is composed of six lines as opposed to the four lines in $\mathcal{D}_{-1}$. Especially in $\mathcal{R}^1_\alpha$, this becomes much more pronounced.
+\end{frame}
+
+\begin{frame}{Results}
+    Since the remaining cases either have a rectangular or hexagonal fundamental domain, their general behavior will be similar to either the $d=-1$ or $d=-3$ cases, just deformed according to its basis. Still, their plots also quite fascinating! For instance, the $d=-2$ and $d=-7$ cases:
+\end{frame}
+
+\begin{frame}{Results}
+
+    \begin{figure}[htbp]
+        \centering
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{pythr1.png}
+            \caption{$N(\mathcal{R}_\alpha^0(z))$ with $d=-2$. The red dot is $\alpha$.}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{pythr2.png}
+            \caption{$N(\mathcal{R}_\alpha^1(z))$ with $d=-2$.}
+        \end{subfigure}
+    \end{figure}
+    
+\end{frame}
+
+\begin{frame}{Results}
+
+    \begin{figure}[htbp]
+        \centering
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{vegasr1.png}
+            \caption{$N(\mathcal{R}_\alpha^0(z))$ with $d=-7$. The red dot is $\alpha$.}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{vegasr2.png}
+            \caption{$N(\mathcal{R}_\alpha^1(z))$ with $d=-7$.}
+        \end{subfigure}
+    \end{figure}
+
+\end{frame}
+
+\begin{frame}{Conclusion}
+    In conclusion, let us answer the questions we outlined earlier on in the presentation.
+\end{frame}
+
+\begin{frame}{Conclusion}
+    \textbf{Why are fractals showing up?}
+
+    As we saw, this is due all copies of the fundamental domain being "squished" by the division algorithm into many concentric circles near the origin. That is, the self-similar fractal aspect of plots of $\mathcal{R}_\alpha^0$ come from these concentric circles.
+\end{frame}
+
+\begin{frame}{Conclusion}
+    \textbf{How does the plot change as we consider different values of $\omega$?}
+
+    This again all depends on the fundamental domain. If $d=-1,-2$ then its plot will be more rectangular. If $d=-3,-7,-11$ then its plot will be more hexagonal.
+\end{frame}
+
+\begin{frame}{Conclusion}
+    \textbf{Can we try to describe this geometry mathematically?}
+
+    We can indeed describe the skeleton of the geometry by consider the parametrization of a line in the complex plane and seeing how it maps by $h_k(z)$.
+\end{frame}
+
+\begin{frame}{Conclusion}
+    Ultimately, understanding the geometry of $\mathcal{R}_\alpha^k$ requires understanding the fundamental domain of the underlying quadratic integer ring.
+
+    Other research directions regarding the division algorithm in quadratic integer rings could be
+
+    \begin{itemize}
+        \item Analyzing such Euclidean domains with $d>0$
+        \item Studying how the choice of $\gamma$ affects the geometry of $\mathcal{R}_\alpha^k$
+        \item Studying the geometry of the step count of the Euclidean algorithm in these rings
+    \end{itemize}
+    
+\end{frame}
+
+\end{document}
